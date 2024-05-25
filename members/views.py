@@ -1,4 +1,5 @@
 from typing import Any
+from django.db.models.query import QuerySet
 from django.shortcuts import render
 from django.urls import reverse
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
@@ -18,6 +19,11 @@ class MemberListView(ListView):
         context = super().get_context_data(**kwargs)
         context["title"] = "All members"
         return context
+    
+    def get_queryset(self):
+        qs = super().get_queryset()
+        return qs.filter(lastname="Vogt").order_by("firstname")
+
     
 
 # MemberDetailView
@@ -71,7 +77,7 @@ class MemberDeleteView(DeleteView):
     template_name = "members/member-delete.html"
     context_object_name = "member"
 
-    
+
     def get_success_url(self):
        return reverse("member-index")
     
