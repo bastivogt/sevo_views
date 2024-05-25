@@ -175,9 +175,13 @@ class DeleteView(View):
         context = super().get_context()
         context[type(self).context_model_name] = type(self)._model_instance
         return context
+    
+    def success(self, request, **kwargs):
+        pass
 
     def post(self, request, **kwargs):
         type(self)._model_instance.delete()
+        self.success(request, **kwargs)
         url = reverse(type(self).redirect_path_name)
         return HttpResponseRedirect(url)
         
