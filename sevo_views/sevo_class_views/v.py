@@ -40,6 +40,8 @@ class RedirectView(BaseView):
     path_name = None
 
     def _setup(self, request, **kwargs):
+        if type(self).path_name == None:
+            raise Exception("path_name must be not None")
         url = reverse(type(self).path_name)
         return HttpResponseRedirect(url)
 
@@ -56,7 +58,6 @@ class View(BaseView):
         pass
 
     def _setup(self, request, **kwargs):
-        ret = None
         if request.method == "POST":
             return self.post(request, **kwargs)
 
@@ -126,11 +127,10 @@ class CreateUpdateView(View):
 
     def success(self, request, **kwargs):
         return self.get(request, **kwargs)
-        return super()._setup(request, **kwargs)
+
 
     def fail(self, request, **kwargs):
         return self.get(request, **kwargs)
-        return super()._setup(request, **kwargs)
 
     def post(self, request, **kwargs):
         if type(self).model:
@@ -158,3 +158,26 @@ class CreateUpdateView(View):
         return super().get(request, **kwargs)
 
 
+
+# DeleteView
+class DeleteView(View):
+    model = None
+    _model_instance = None
+    context_model_name = "model"
+    redirect_path_name = None
+
+    def _setup(self, request, **kwargs):
+        type(self)._model_instance = get_object_or_404(type(self).model, **kwargs)
+        return super()._setup(request, **kwargs)
+    
+
+    def get_context(self):
+        context = super().get_context()
+        context[type(self).context_model_name] = type(self)._model_instance
+        return context
+
+    def post(self, request, **kwargs):
+        type(self)._model_instance.delete()
+        url = reverse(type(self).redirect_path_name)
+        return HttpResponseRedirect(url)
+        

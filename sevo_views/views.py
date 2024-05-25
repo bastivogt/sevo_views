@@ -10,29 +10,8 @@ from . import forms
 # Create your views here.
 
 
-class IndexView(v.BaseView):
-    template_name = "sevo_views/index.html"
 
-    def get_context(self):
-        context = super().get_context()
-        context["title"] = "Hello world, from index.html!"
-        return context
-    
-
-class IndexView2(v.View):
-    template_name = "sevo_views/index.html"
-
-    def get(self, request, **kwargs):
-        print("Hello from get")
-        print(request.user)
-
-
-    def get_context(self):
-        context = super().get_context()
-        context["title"] = "Hello world 2!"
-        return context
-
-
+# list
 class IndexListView(v.ListView):
     model = models.Person
     template_name = "sevo_views/index.html"
@@ -47,12 +26,13 @@ class IndexListView(v.ListView):
     
     def get_queries(self):
         q = self.get_query_object()
-        q = q.filter(lastname="Vogt").order_by("-birthday")
+        #q = q.filter(lastname="Vogt").order_by("-birthday")
+        q = q.order_by("birthday")
         return q
 
 
 
-
+# read
 class PersonDetailView(v.DetailView):
     model = models.Person
     template_name = "sevo_views/person_detail.html"
@@ -64,7 +44,7 @@ class PersonDetailView(v.DetailView):
         return context
 
 
-
+# create
 class PersonCreateView(v.CreateUpdateView):
     model_form = forms.PersonForm
     template_name = "sevo_views/create_update_person.html"
@@ -72,15 +52,16 @@ class PersonCreateView(v.CreateUpdateView):
     def get_context(self):
         context = super().get_context()
         context["title"] = "Create new person"
+        context["submit_label"] = "Create"
         return context
 
     def success(self, request, **kwargs):
         print("success")
-        url = reverse("index")
+        url = reverse("people-index")
         return HttpResponseRedirect(url)
         
 
-
+# update
 class PersonUpdateView(v.CreateUpdateView):
     model_form = forms.PersonForm
     model = models.Person
@@ -89,33 +70,18 @@ class PersonUpdateView(v.CreateUpdateView):
     def get_context(self):
         context = super().get_context()
         context["title"] = "Create new person"
+        context["submit_label"] = "Update"
         return context
 
     def success(self, request, **kwargs):
         print("success")
-        url = reverse("index")
+        url = reverse("people-index")
         return HttpResponseRedirect(url)
 
 
 
-def index(request):
-    v.BaseView.as_view()
-    v.View.as_view()
-    return render(request, "sevo_views/index.html", {
-        "title": "all people"
-    })
-
-
-def create_person(request):
-    if request.method == "POST":
-        form = forms.PersonForm(request.POST)
-        if form.is_valid():
-            form.save()
-            print("saved")
-    else:
-        form = forms.PersonForm()
-
-    return render(request, "sevo_views/create_person.html", {
-        "title": "CREATE PERSON",
-        "form": form
-    })
+# delete
+class PersonDeleteView(v.DeleteView):
+    template_name = "sevo_views/person_delete.html"
+    model = models.Person
+    redirect_path_name = "people-index"

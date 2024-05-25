@@ -24,9 +24,9 @@
                     {{ field.errors }}
                 </div>
             {% endfor %}
-            <button>Create</button>
+            <button>{{ submit_label }}</button>
         </form>
     </div>
     <br>
-    <a href="{% url "index" %}">back to index</a>
+    <a href="{% url "people-index" %}">back to index</a>
 {% endblock %}

@@ -21,6 +21,7 @@
                 <a href="{% url "person-detail" id=person.id %}">{{ person.firstname }}</a>
                 - 
                 [<a href="{% url "person-update" id=person.id %}">Edit</a>]
+                [<a href="{% url "person-delete" id=person.id %}">Delete</a>]
             </li>
         {% endfor %}
     </ul>
