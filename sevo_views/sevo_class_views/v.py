@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponse
+from django.http import HttpResponseRedirect
+from django.urls import reverse
 
 
 # BaseView
@@ -10,7 +11,12 @@ class BaseView():
 
 
     @classmethod
-    def as_view(cls, **kwargs):
+    def as_view(cls, **init_kwargs):
+        for key in init_kwargs:
+            if hasattr(cls, key):
+                setattr(cls, key, init_kwargs[key])
+
+        
         def view_function(request, **kwargs):
             cls._instance = cls()
             setup_return = cls._instance._setup(request, **kwargs)
@@ -28,6 +34,15 @@ class BaseView():
 
     def after_setup(self, request, **kwargs):
         pass
+
+# RedirectView
+class RedirectView(BaseView):
+    path_name = None
+
+    def _setup(self, request, **kwargs):
+        url = reverse(type(self).path_name)
+        return HttpResponseRedirect(url)
+
 
 
 # View

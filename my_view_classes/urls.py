@@ -17,7 +17,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+from sevo_views.views import v
+
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path("", include("sevo_views.urls"))
+    path("", v.RedirectView.as_view(path_name="people-index")),
+    path("people", include("sevo_views.urls"))
 ]
