@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {{ title|title }}
+{% endblock %}
+
+
+{% block header %}
+    <header>
+        <h1>
+            {{ title|title }}
+        </h1>
+    </header>
+{% endblock %}
+
+{% block main %}
+    <div>
+        <form action="" method="POST">
+            {% csrf_token %}
+            {% for field in form %}
+                <div>
+                    {{ field.label_tag }}
+                    {{ field }}
+                    {{ field.errors }}
+                </div>
+            {% endfor %}
+            <button>Create</button>
+        </form>
+    </div>
+    <br>
+    <a href="{% url "index" %}">back to index</a>
+{% endblock %}

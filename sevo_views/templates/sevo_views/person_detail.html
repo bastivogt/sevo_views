@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {{ title|title }}
+{% endblock %}
+
+
+{% block header %}
+    <header>
+        <h1>
+            {{ title|title }}
+        </h1>
+    </header>
+{% endblock %}
+
+{% block main %}
+    <div>
+        <strong>Firstname: </strong>{{ person.firstname }}
+    </div>
+    <div>
+        <strong>Lastname: </strong>{{ person.lastname }}
+    </div>
+    <div>
+        <strong>Birthday: </strong>{{ person.birthday }}
+    </div>
+    <br>
+    <a href="{% url "index" %}">back to index</a>
+{% endblock %}

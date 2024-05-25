@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {{ title|title }}
+{% endblock %}
+
+
+{% block header %}
+    <header>
+        <a href="{% url "person-create" %}">Create new person</a>
+        <h1>
+            {{ title|title }}
+        </h1>
+    </header>
+{% endblock %}
+
+{% block main %}
+    <ul>
+        {% for person in model %}
+            <li>
+                <a href="{% url "person-detail" id=person.id %}">{{ person.firstname }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}
