@@ -94,41 +94,6 @@ class DetailView(BaseView):
         return super()._setup(request, **kwargs)
         
 
-# CreateView
-class CreateView(View):
-    model_form: None
-    context_model_form_name = "form"
-    _form_instance = None
-
-    def get_context(self):
-        context = super().get_context()
-        context[type(self).context_model_form_name] = type(self)._form_instance
-        return context
-
-
-    def success(self, request, **kwargs):
-        return super()._setup(request, **kwargs)
-
-    def fail(self, request, **kwargs):
-        return super()._setup(request, **kwargs)
-
-    def post(self, request, **kwargs):
-
-        type(self)._form_instance = type(self).model_form(request.POST)
-
-        if type(self)._form_instance.is_valid():
-            print("UPDATE VALID")
-            type(self)._form_instance.save()
-            return self.success(request, **kwargs)
-        return self.fail(request, **kwargs)
-        
-
-
-    def get(self, request, **kwargs):
-        type(self)._form_instance = type(self).model_form()
-        return super().get(request, **kwargs)
-
-
 
 
 class CreateUpdateView(View):
@@ -166,7 +131,8 @@ class CreateUpdateView(View):
 
 
     def _setup(self, request, **kwargs):
-        type(self)._model_instance = get_object_or_404(type(self).model, **kwargs)
+        if type(self).model:
+            type(self)._model_instance = get_object_or_404(type(self).model, **kwargs)
         return super()._setup(request, **kwargs)
     
     def get(self, request, **kwargs):
