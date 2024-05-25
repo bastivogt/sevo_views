@@ -22,5 +22,6 @@ from sevo_views.views import v
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("", v.RedirectView.as_view(path_name="people-index")),
-    path("people", include("sevo_views.urls"))
+    path("people", include("sevo_views.urls")), 
+    path("members", include("members.urls"))
 ]

@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {{ title|title }}
+{% endblock %}
+
+
+{% block header %}
+    <header>
+        <h1>
+            {{ title|title }}
+        </h1>
+    </header>
+{% endblock %}
+
+{% block main %}
+    <form action="" method="post">
+        {% csrf_token %}
+        <p>Do you really want to delete this member?</p>
+        <div>
+            <strong>Firstname: </strong>{{ member.firstname }}
+        </div>
+        <div>
+            <strong>Lastname: </strong>{{ member.lastname }}
+        </div>
+        <div>
+            <strong>Birthday: </strong>{{ member.birthday}}
+        </div>
+        <button>Delete</button>
+    </form>
+    <hr>
+    <a href="{% url "member-index" %}">Back to members list</a>
+{% endblock %}

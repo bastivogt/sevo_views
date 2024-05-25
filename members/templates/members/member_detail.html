@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {{ title|title }}
+{% endblock %}
+
+
+{% block header %}
+    <header>
+        <h1>
+            {{ title|title }}
+        </h1>
+    </header>
+{% endblock %}
+
+{% block main %}
+    <div>
+        <strong>Firstname: </strong>{{ member.firstname }}
+    </div>
+    <div>
+        <strong>Lastname: </strong>{{ member.lastname }}
+    </div>
+    <div>
+        <strong>Birthday: </strong>{{ member.birthday}}
+    </div>
+    <hr>
+    <a href="{% url "member-index" %}">Back to members list</a>
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {{ title|title }}
+{% endblock %}
+
+
+{% block header %}
+    <header>
+        <a href="{% url "member-create" %}">Add new member</a>
+        <hr>
+        <h1>
+            {{ title|title }}
+        </h1>
+    </header>
+{% endblock %}
+
+{% block main %}
+    <ul>
+        {% for member in members %}
+            <li>
+                <a href="{% url "member-detail" pk=member.pk %}">{{ member.get_fullname }}</a>
+                -
+                <a href="{% url "member-update" pk=member.pk %}">[Edit]</a>
+                <a href="{% url "member-delete" pk=member.pk %}">[Delete]</a>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}

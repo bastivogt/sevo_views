@@ -37,7 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    "sevo_views"
+    "sevo_views",
+    "members"
 ]
 
 MIDDLEWARE = [
