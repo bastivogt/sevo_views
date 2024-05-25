@@ -47,14 +47,7 @@ class View(BaseView):
 
         return self.get(request, **kwargs)
 
-        # if request.method == "GET":
-        #     ret =  self.get(request, **kwargs)
 
-
-        # if ret != None:
-        #     return ret
-        
-        # return super()._setup(request, **kwargs)
 
 # ListView
 class ListView(BaseView):
@@ -83,6 +76,8 @@ class ListView(BaseView):
         type(self)._query_object = self.get_queries()
         return super()._setup(request, **kwargs)
 
+
+
 # DetailView
 class DetailView(BaseView):
     model = None
@@ -99,14 +94,15 @@ class DetailView(BaseView):
         return super()._setup(request, **kwargs)
         
 
+# CreateView
 class CreateView(View):
     model_form: None
     context_model_form_name = "form"
-    form_object = None
+    _form_instance = None
 
     def get_context(self):
         context = super().get_context()
-        context[type(self).context_model_form_name] = type(self).form_object
+        context[type(self).context_model_form_name] = type(self)._form_instance
         return context
 
 
@@ -117,17 +113,67 @@ class CreateView(View):
         return super()._setup(request, **kwargs)
 
     def post(self, request, **kwargs):
-        type(self).form_object = type(self).model_form(request.POST)
-        if type(self).form_object.is_valid():
-            type(self).form_object.save()
+
+        type(self)._form_instance = type(self).model_form(request.POST)
+
+        if type(self)._form_instance.is_valid():
+            print("UPDATE VALID")
+            type(self)._form_instance.save()
             return self.success(request, **kwargs)
         return self.fail(request, **kwargs)
         
 
 
     def get(self, request, **kwargs):
-        type(self).form_object = type(self).model_form()
+        type(self)._form_instance = type(self).model_form()
         return super().get(request, **kwargs)
 
+
+
+
+class CreateUpdateView(View):
+    model_form: None
+    model = None
+    context_model_form_name = "form"
+    _form_instance = None
+    _model_instance = None
+
+    def get_context(self):
+        context = super().get_context()
+        context[type(self).context_model_form_name] = type(self)._form_instance
+        return context
+
+
+    def success(self, request, **kwargs):
+        return self.get(request, **kwargs)
+        return super()._setup(request, **kwargs)
+
+    def fail(self, request, **kwargs):
+        return self.get(request, **kwargs)
+        return super()._setup(request, **kwargs)
+
+    def post(self, request, **kwargs):
+        if type(self).model:
+            type(self)._form_instance = type(self).model_form(request.POST, instance=type(self)._model_instance)
+        else:
+            type(self)._form_instance = type(self).model_form(request.POST)
+        
+        if type(self)._form_instance.is_valid():
+            type(self)._form_instance.save()
+            return self.success(request, **kwargs)
+        return self.fail(request, **kwargs)
+        
+
+
+    def _setup(self, request, **kwargs):
+        type(self)._model_instance = get_object_or_404(type(self).model, **kwargs)
+        return super()._setup(request, **kwargs)
+    
+    def get(self, request, **kwargs):
+        if type(self).model:
+            type(self)._form_instance = type(self).model_form(instance=type(self)._model_instance)
+        else:
+            type(self)._form_instance = type(self).model_form()
+        return super().get(request, **kwargs)
 
 

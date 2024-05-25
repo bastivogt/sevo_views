@@ -65,9 +65,9 @@ class PersonDetailView(v.DetailView):
 
 
 
-class PersonCreateView(v.CreateView):
+class PersonCreateView(v.CreateUpdateView):
     model_form = forms.PersonForm
-    template_name = "sevo_views/create_person.html"
+    template_name = "sevo_views/create_update_person.html"
 
     def get_context(self):
         context = super().get_context()
@@ -81,6 +81,20 @@ class PersonCreateView(v.CreateView):
         
 
 
+class PersonUpdateView(v.CreateUpdateView):
+    model_form = forms.PersonForm
+    model = models.Person
+    template_name = "sevo_views/create_update_person.html"
+
+    def get_context(self):
+        context = super().get_context()
+        context["title"] = "Create new person"
+        return context
+
+    def success(self, request, **kwargs):
+        print("success")
+        url = reverse("index")
+        return HttpResponseRedirect(url)
 
 
 
